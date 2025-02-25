@@ -1,0 +1,25 @@
+{
+    "root_dir": "",
+    "directories": [
+      "ec2",
+      "cloudformation",
+      "kubernetes",
+      "security",
+      "scripts"
+    ],
+    "files": {
+      "index.md": "# Learning Journal\n\n## Table of Contents\n\n- [EC2](ec2/)\n- [CloudFormation](cloudformation/)\n- [Kubernetes](kubernetes/)\n- [Security](security/)\n- [Scripts](scripts/)",
+      "ec2/ec2-instance-launch.md": "# EC2 Instance Launch\n\nThis document covers how to launch an EC2 instance.",
+      "ec2/ec2-auto-scaling.md": "# EC2 Auto Scaling\n\nThis document covers how to configure EC2 Auto Scaling.",
+      "ec2/ec2-security-groups.md": "# EC2 Security Groups\n\nThis document covers how to work with EC2 Security Groups.",
+      "cloudformation/cloudformation-basic-template.md": "# CloudFormation Basic Template\n\nBasic CloudFormation template example.",
+      "cloudformation/cloudformation-nested-stacks.md": "# CloudFormation Nested Stacks\n\nThis document covers how to use nested stacks in CloudFormation.",
+      "cloudformation/cloudformation-best-practices.md": "# CloudFormation Best Practices\n\nThis document covers best practices for using CloudFormation.",
+      "kubernetes/eks-cluster-setup.md": "# EKS Cluster Setup\n\nThis document covers how to setup an EKS cluster.",
+      "kubernetes/kubernetes-deployments.md": "# Kubernetes Deployments\n\nThis document covers how to work with Kubernetes deployments.",
+      "kubernetes/kubernetes-services.md": "# Kubernetes Services\n\nThis document covers how to work with Kubernetes services.",
+      "security/iam-roles.md": "# IAM Roles\n\nThis document covers IAM roles.",
+      "security/security-hub.md": "# AWS Security Hub\n\nThis document covers AWS Security Hub.",
+      "scripts/boto3-ec2-script.py": "# example python script\n\n# example script."
+    }
+  }

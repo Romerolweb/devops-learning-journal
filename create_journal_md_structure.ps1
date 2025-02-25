@@ -1,67 +1,42 @@
+# Load the JSON structure
+$structure = Get-Content -Path "structure.json" -Raw | ConvertFrom-Json
+
 # Set the root directory
-$root_dir = "learning-journal"
+$root_dir = $structure.root_dir
 
-# Create the directory structure
-Write-Host "Creating directory structure..."
-New-Item -ItemType Directory -Path $root_dir | Out-Null
-New-Item -ItemType Directory -Path "$root_dir\ec2" | Out-Null
-New-Item -ItemType Directory -Path "$root_dir\cloudformation" | Out-Null
-New-Item -ItemType Directory -Path "$root_dir\kubernetes" | Out-Null
-New-Item -ItemType Directory -Path "$root_dir\security" | Out-Null
-New-Item -ItemType Directory -Path "$root_dir\scripts" | Out-Null
+# Handle empty or "." root directory
+if ([string]::IsNullOrEmpty($root_dir) -or $root_dir -eq ".") {
+    $root_dir = Get-Location
+} else {
+    $root_dir = Convert-Path -Path $root_dir
+}
 
-# Create index.md
-Write-Host "Creating index.md..."
-@"
-# Learning Journal
+# Create directories
+Write-Host "Creating directories..."
+foreach ($dir in $structure.directories) {
+    $dirPath = Join-Path -Path $root_dir -ChildPath $dir
+    if (-not (Test-Path -Path $dirPath)) {
+        New-Item -ItemType Directory -Path $dirPath | Out-Null
+        Write-Host "Created directory: $dirPath"
+    } else {
+        Write-Host "Directory already exists: $dirPath"
+    }
+}
 
-## Table of Contents
+# Create files
+Write-Host "Creating files..."
+if ($structure.files) { #check if the files object exists.
+    foreach ($key in $structure.files.PSObject.Properties.Name) { #loop through the names of the properties.
+        $filePath = Join-Path -Path $root_dir -ChildPath $key
+        if (-not (Test-Path -Path $filePath)) {
+            $structure.files.$key | Out-File -FilePath $filePath -Force
+            Write-Host "Created file: $filePath"
+        } else {
+            Write-Host "File already exists: $filePath"
+        }
+    }
+} else {
+    Write-Host "The 'files' property in structure.json is missing."
+}
 
-- [EC2](ec2/)
-- [CloudFormation](cloudformation/)
-- [Kubernetes](kubernetes/)
-- [Security](security/)
-- [Scripts](scripts/)
-"@ | Out-File -FilePath "$root_dir\index.md"
-
-# Create example ec2 markdown file.
-Write-Host "Creating example ec2 markdown file..."
-@"
-# EC2 Instance Launch
-
-This document covers how to launch an EC2 instance.
-"@ | Out-File -FilePath "$root_dir\ec2\ec2-instance-launch.md"
-
-# Create example cloudformation markdown file.
-Write-Host "Creating example cloudformation markdown file..."
-@"
-# CloudFormation Basic Template
-
-Basic CloudFormation template example.
-"@ | Out-File -FilePath "$root_dir\cloudformation\cloudformation-basic-template.md"
-
-# Create example kubernetes markdown file.
-Write-Host "Creating example kubernetes markdown file..."
-@"
-# EKS Cluster Setup
-
-This document covers how to setup an EKS cluster.
-"@ | Out-File -FilePath "$root_dir\kubernetes\eks-cluster-setup.md"
-
-# Create example security markdown file.
-Write-Host "Creating example security markdown file..."
-@"
-# IAM Roles
-
-This document covers IAM roles.
-"@ | Out-File -FilePath "$root_dir\security\iam-roles.md"
-
-# Create example python script file.
-Write-Host "Creating example python script file..."
-@"
-# example python script
-
-# example script.
-"@ | Out-File -FilePath "$root_dir\scripts\boto3-ec2-script.py"
-
-Write-Host "Directory structure created successfully."
+Write-Host "Structure creation complete."
